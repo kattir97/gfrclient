@@ -1,0 +1,13 @@
+version: 1
+services:
+  - type: web
+    name: your-service-name
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm run serve # or your command to serve the static files
+    staticPublishPath: dist
+    routes:
+      - src: /api/(.*)
+        dest: https://gafar-server.onrender.com/api/$1 # Forward API requests to your backend
+      - src: /(.*)
+        dest: /index.html # Redirect all other requests to index.html
