@@ -8,7 +8,7 @@ export const gafarApi = axios.create({
   headers: {
     Authorization: `Bearer ${authToken}`
   },
-  // withCredentials: true
+  withCredentials: true
 });
 
 // Add a request interceptor
