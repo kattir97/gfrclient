@@ -30,7 +30,7 @@ const SearchPage: React.FC = () => {
         },
       });
     }
-  }, [foundWords, searchTerm]); //
+  }, [foundWords]); //
 
   const handleSearchTerm = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value.toLowerCase());
@@ -101,7 +101,7 @@ const SearchPage: React.FC = () => {
       <Spin fullscreen spinning={isAppLoading} />
       <Search
         placeholder="Введите слово для поиска..."
-        allowClear
+        // allowClear
         size="large"
         onSearch={handleSearch}
         onChange={handleSearchTerm}
