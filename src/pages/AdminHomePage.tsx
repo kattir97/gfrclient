@@ -6,7 +6,6 @@ import { createPortal } from "react-dom";
 import { DeleteModal } from "../components/DeleteModal";
 import { useHomeStore } from "../stores/homeStore";
 import { v4 as uuidv4 } from "uuid";
-import { useRenderCount } from "@uidotdev/usehooks";
 import { Button, GetProps, Input, message, Spin } from "antd";
 import { IoPencil, IoTrash } from "react-icons/io5";
 import "../css_modules/pagination.css";
@@ -34,10 +33,7 @@ export default function AdminHomePage() {
   const [foundWords, setFoundWords] = useState<WordType[]>([]);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedWordId, setSelectedWordId] = useState<number>(0);
-  const renderCount = useRenderCount();
   const { isAppLoading, setIsAppLoading } = useAppStore();
-
-  console.log("renderCount: ", renderCount);
 
   useEffect(() => {
     const fetchWords = async () => {
