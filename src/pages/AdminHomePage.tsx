@@ -74,12 +74,6 @@ export default function AdminHomePage() {
     }
   };
 
-  // const handleSearch = async () => {
-  //   const result = await searchWords(queryText);
-  //   console.log(result);
-  //   setFoundWords(result.data);
-  // };
-
   const handlePageClick = (event: { selected: number }) => {
     setCurrentPage(event.selected);
   };

@@ -9,7 +9,6 @@ import { useAuthStore } from "../stores/authStore";
 export const Layout: React.FC = () => {
   const { isLogged, setIsLogged } = useAppStore();
   const { user } = useAuthStore();
-  console.log("user", user);
   const navigate = useNavigate();
   const handleLogout = () => {
     setIsLogged(false);

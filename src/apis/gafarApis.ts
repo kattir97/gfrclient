@@ -12,7 +12,6 @@ export const gafarApi = axios.create({
   withCredentials: import.meta.env.VITE_WITH_CREDENTIALS === 'true'
 });
 
-console.log(gafarApi.defaults)
 
 // Add a request interceptor
 gafarApi.interceptors.request.use(
