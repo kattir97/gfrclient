@@ -4,11 +4,12 @@ const authToken = localStorage.getItem('authToken');
 
 export const gafarApi = axios.create({
   // baseURL: 'http://localhost:5000/api/v1/',
-  baseURL: 'https://kattir97-gfrserver-8bf8.twc1.net/api/v1/',
+  // baseURL: 'https://kattir97-gfrserver-8bf8.twc1.net/api/v1/',
+  baseURL: import.meta.env.VITE_BASE_URL,
   headers: {
     Authorization: `Bearer ${authToken}`
   },
-  withCredentials: true
+  withCredentials: import.meta.env.VITE_WITH_CREDENTIALS === 'true'
 });
 
 // Add a request interceptor
