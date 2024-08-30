@@ -6,6 +6,7 @@ import { WordType } from "../utils/types";
 import Mark from "mark.js";
 import { v4 as uuidv4 } from "uuid";
 import { useAppStore } from "../stores/appStore";
+import "./css/styles.css";
 
 const { Search } = Input;
 type SearchProps = GetProps<typeof Input.Search>;
@@ -30,7 +31,7 @@ const SearchPage: React.FC = () => {
         },
       });
     }
-  }, [foundWords]); //
+  }, [foundWords]);
 
   const handleSearchTerm = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value.toLowerCase());
@@ -75,18 +76,18 @@ const SearchPage: React.FC = () => {
       });
 
       return (
-        <Card key={w.id}>
+        <Card key={w.id} className="p-6" style={{ padding: "0" }}>
           <h2 className="text-3xl bold">{w.word}</h2>
           <h4 className="text-sm italic mb-2">{w.description}</h4>
           <div className="flex flex-col gap-2">
-            <Card title="Значения" bordered={false} size="small">
+            <Card title="Значения" bordered={false} size="small" style={{ boxShadow: "none" }}>
               {defs}
             </Card>
-            <Card title="Примеры" bordered={false} size="small">
+            <Card title="Примеры" bordered={false} size="small" style={{ boxShadow: "none" }}>
               {exs}
             </Card>
             {conjs.length >= 1 ? (
-              <Card title="Cклонения" bordered={false} size="small">
+              <Card title="Cклонения" bordered={false} size="small" style={{ boxShadow: "none" }}>
                 {conjs}
               </Card>
             ) : null}

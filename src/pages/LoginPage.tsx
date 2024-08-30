@@ -8,6 +8,7 @@ const LoginPage: React.FC = () => {
   const { login, admin } = useAuthStore();
   const navigate = useNavigate();
   const { setIsLogged, setIsAppLoading, isAppLoading } = useAppStore();
+  const { setUser } = useAuthStore();
 
   const handleLogin = async (values: unknown) => {
     try {
@@ -15,7 +16,11 @@ const LoginPage: React.FC = () => {
       const logRes = await login(values);
       if (logRes.status === 200) {
         const token = logRes.data.token;
+        const username = logRes.data.user.username;
+
         localStorage.setItem("authToken", token);
+        localStorage.setItem("user", username);
+        setUser(username);
       }
 
       const adRes = await admin();

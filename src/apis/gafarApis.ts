@@ -9,7 +9,7 @@ export const gafarApi = axios.create({
   headers: {
     Authorization: `Bearer ${authToken}`
   },
-  withCredentials: import.meta.env.VITE_WITH_CREDENTIALS
+  withCredentials: import.meta.env.VITE_WITH_CREDENTIALS === 'true'
 });
 
 console.log(gafarApi.defaults)
