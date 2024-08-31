@@ -42,6 +42,10 @@ const SearchPage: React.FC = () => {
       message.error("Пожайлуйста введите слово для поиска!");
       return;
     }
+    if (value.trim().length < 3) {
+      message.error("Длина слова должна быть больше двух букв");
+      return;
+    }
     setIsAppLoading(true);
     const result = await fullTextSearch(value);
     setFoundWords(result.data);
