@@ -53,7 +53,7 @@ const SearchPage: React.FC = () => {
 
   const renderedWords = () => {
     return foundWords.map((w: WordType) => {
-      const defs = w.definitions.join(",");
+      const defs = w.definitions;
       const exs = w.examples.map((ex) => {
         return (
           <div className="flex flex-col gap-1" key={uuidv4()}>
@@ -81,7 +81,13 @@ const SearchPage: React.FC = () => {
           <h4 className="text-sm italic mb-2">{w.description}</h4>
           <div className="flex flex-col gap-2">
             <Card title="Значения" bordered={false} size="small" style={{ boxShadow: "none" }}>
-              {defs}
+              {defs.map((def) => {
+                return (
+                  <ol className="list-disc">
+                    <li>{def}</li>
+                  </ol>
+                );
+              })}
             </Card>
             <Card title="Примеры" bordered={false} size="small" style={{ boxShadow: "none" }}>
               {exs}
