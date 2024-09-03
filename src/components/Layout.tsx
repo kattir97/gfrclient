@@ -6,7 +6,7 @@ import { FaAngleDown } from "react-icons/fa6";
 import type { MenuProps } from "antd";
 import { useAuthStore } from "../stores/authStore";
 
-export const Layout: React.FC = () => {
+const Layout: React.FC = () => {
   const { isLogged, setIsLogged } = useAppStore();
   const { user } = useAuthStore();
   const navigate = useNavigate();
@@ -51,3 +51,5 @@ export const Layout: React.FC = () => {
     </>
   );
 };
+
+export default Layout;

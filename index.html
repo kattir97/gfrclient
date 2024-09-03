@@ -2,13 +2,17 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/book.svg" />
-    <link
-      href="https://fonts.googleapis.com/css?family=Nunito:400,700&display=swap"
-      rel="stylesheet"
-    />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Агульский словарь</title>
+    <link rel="icon" type="image/svg+xml" href="/book.svg" />
+    <!-- Preload the font to reduce render-blocking -->
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/css?family=Nunito:400,700&display=swap"
+      as="style"
+      onload="this.rel='stylesheet'"
+    />
   </head>
   <body>
     <div id="root"></div>
