@@ -11,7 +11,7 @@ import { useEditorStore } from "../stores/editorStore";
 import { useAppStore } from "../stores/appStore";
 import { message, Spin } from "antd";
 
-const EditWord: React.FC = () => {
+export function EditWord() {
   const data = useLoaderData() as WordType;
   const { isAppLoading, setIsAppLoading } = useAppStore();
 
@@ -120,6 +120,4 @@ const EditWord: React.FC = () => {
       </form>
     </div>
   );
-};
-
-export default EditWord;
+}

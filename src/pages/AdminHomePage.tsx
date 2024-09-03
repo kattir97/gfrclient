@@ -15,7 +15,7 @@ import { useAppStore } from "../stores/appStore";
 
 const { Search } = Input;
 
-const AdminHomePage: React.FC = () => {
+export default function AdminHomePage() {
   const {
     words,
     setWords,
@@ -34,6 +34,7 @@ const AdminHomePage: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedWordId, setSelectedWordId] = useState<number>(0);
   const { isAppLoading, setIsAppLoading } = useAppStore();
+
   useEffect(() => {
     const fetchWords = async () => {
       const result = await getAllWords();
@@ -109,6 +110,7 @@ const AdminHomePage: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col p-5">
+      <Spin fullscreen spinning={isAppLoading} />
       <Link to={"/add-word"}>
         <Button
           style={{ height: "4rem", width: "4rem" }}
@@ -121,14 +123,14 @@ const AdminHomePage: React.FC = () => {
 
       <Search
         placeholder="input search text"
+        allowClear
         size="large"
         onSearch={handleSearch}
         className="mb-5"
       />
       <Sorting />
 
-      <div className="mb-auto relative h-2/4 ">
-        <Spin spinning={isAppLoading} fullscreen />
+      <div className="mb-auto">
         {foundWords.length > 0 ? renderedWords(foundWords) : renderedWords(words)}
       </div>
       {showModal &&
@@ -144,6 +146,4 @@ const AdminHomePage: React.FC = () => {
       />
     </div>
   );
-};
-
-export default AdminHomePage;
+}

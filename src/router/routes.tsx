@@ -1,18 +1,15 @@
-import { lazy, Suspense } from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
+
+import AdminHomePage from "../pages/AdminHomePage.tsx";
+import { AddWord } from "../pages/AddWord.tsx";
+import { Layout } from "../components/Layout.tsx";
+import { EditWord } from "../pages/EditWord.tsx";
 import { wordLoader } from "./loaders/wordLoader.ts";
 import SearchPage from "../pages/SearchPage.tsx";
-import { Spin } from "antd";
-
-// Lazy load your components
-const AdminHomePage = lazy(() => import("../pages/AdminHomePage.tsx"));
-const AddWord = lazy(() => import("../pages/AddWord.tsx"));
-const Layout = lazy(() => import("../components/Layout.tsx"));
-const EditWord = lazy(() => import("../pages/EditWord.tsx"));
-const RegisterPage = lazy(() => import("../pages/RegisterPage.tsx"));
-const LoginPage = lazy(() => import("../pages/LoginPage.tsx"));
-const ProtectedRoute = lazy(() => import("./ProtectedRoute.tsx"));
-const NotFoundPage = lazy(() => import("../pages/NotFoundPage.tsx"));
+import RegisterPage from "../pages/RegisterPage.tsx";
+import LoginPage from "../pages/LoginPage.tsx";
+import ProtectedRoute from "./ProtectedRoute.tsx";
+import NotFoundPage from "../pages/NotFoundPage.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -29,36 +26,19 @@ export const router = createBrowserRouter([
         element: <SearchPage />,
       },
       {
-        element: (
-          <Suspense fallback={<Spin fullscreen spinning={true} />}>
-            {" "}
-            <ProtectedRoute />
-          </Suspense>
-        ),
+        element: <ProtectedRoute />,
         children: [
           {
             path: "admin",
-            element: (
-              <Suspense fallback={<Spin fullscreen spinning={true} />}>
-                <AdminHomePage />
-              </Suspense>
-            ),
+            element: <AdminHomePage />,
           },
           {
             path: "add-word",
-            element: (
-              <Suspense fallback={<Spin fullscreen spinning={true} />}>
-                <AddWord />
-              </Suspense>
-            ),
+            element: <AddWord />,
           },
           {
             path: "edit-word/:wordId",
-            element: (
-              <Suspense fallback={<Spin fullscreen spinning={true} />}>
-                <EditWord />
-              </Suspense>
-            ),
+            element: <EditWord />,
             loader: wordLoader,
           },
         ],
@@ -66,19 +46,11 @@ export const router = createBrowserRouter([
 
       {
         path: "register",
-        element: (
-          <Suspense fallback={<Spin fullscreen spinning={true} />}>
-            <RegisterPage />
-          </Suspense>
-        ),
+        element: <RegisterPage />,
       },
       {
         path: "login",
-        element: (
-          <Suspense fallback={<Spin fullscreen spinning={true} />}>
-            <LoginPage />
-          </Suspense>
-        ),
+        element: <LoginPage />,
       },
     ],
   },

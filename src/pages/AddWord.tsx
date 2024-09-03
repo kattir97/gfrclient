@@ -9,7 +9,7 @@ import { Button, Spin } from "antd";
 import { FormEvent } from "react";
 import { useAppStore } from "../stores/appStore";
 
-const AddWord: React.FC = () => {
+export function AddWord() {
   const { reset, addWord } = useEditorStore((state) => state);
   const navigate = useNavigate();
   const { isAppLoading, setIsAppLoading } = useAppStore();
@@ -49,6 +49,4 @@ const AddWord: React.FC = () => {
       </form>
     </div>
   );
-};
-
-export default AddWord;
+}
