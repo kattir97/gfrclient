@@ -42,7 +42,7 @@ const SearchPage: React.FC = () => {
       message.error("Пожайлуйста введите слово для поиска!");
       return;
     }
-    if (value.trim().length < 3) {
+    if (value.trim().length < 2) {
       message.error("Длина слова должна быть больше двух букв");
       return;
     }
@@ -85,9 +85,9 @@ const SearchPage: React.FC = () => {
           <h4 className="text-sm italic mb-2">{w.description}</h4>
           <div className="flex flex-col gap-2">
             <Card title="Значения" bordered={false} size="small" style={{ boxShadow: "none" }}>
-              {defs.map((def) => {
+              {defs.map((def, idx) => {
                 return (
-                  <ol className="list-disc">
+                  <ol className="list-disc" key={idx}>
                     <li>{def}</li>
                   </ol>
                 );
