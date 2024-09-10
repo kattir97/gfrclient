@@ -8,9 +8,10 @@ import { useEditorStore } from "../stores/editorStore";
 import { Button, Spin } from "antd";
 import { FormEvent } from "react";
 import { useAppStore } from "../stores/appStore";
+import { addWord } from "../services/apiService";
 
 export function AddWord() {
-  const { reset, addWord } = useEditorStore((state) => state);
+  const { reset } = useEditorStore((state) => state);
   const navigate = useNavigate();
   const { isAppLoading, setIsAppLoading } = useAppStore();
 

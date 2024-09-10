@@ -1,8 +1,6 @@
 import { create } from "zustand";
 import { ConjugationType, DefinitionType, ExampleType } from "../utils/types";
-import { AxiosResponse } from "axios";
 import { v4 as uuidv4 } from 'uuid';
-import { gafarApi } from "../apis/gafarApis";
 
 interface I_EditorStore {
   word: string;
@@ -19,8 +17,6 @@ interface I_EditorStore {
 }
 
 interface I_EditorStoreActions {
-  addWord: () => Promise<void>,
-  updateWord: (id: number) => Promise<AxiosResponse<{ status: string; message: string }>>,
   setWord: (word: string) => void;
   setDescription: (description: string) => void;
   setSpeechPart: (speechPart: string) => void;
@@ -36,7 +32,7 @@ interface I_EditorStoreActions {
 }
 
 
-const getWordData = () => {
+export const getWordData = () => {
   const state = useEditorStore.getState();
   return {
     word: state.word,
@@ -84,19 +80,6 @@ export const useEditorStore = create<I_EditorStore & I_EditorStoreActions>()((se
   setDefinitions: (definitions) => set({ definitions }),
   setExamples: (examples) => set({ examples }),
   setConjugations: (conjugations) => set({ conjugations }),
-
-
-
-  addWord: async (): Promise<void> => {
-    await gafarApi.post("words", getWordData());
-  },
-
-  updateWord: async (
-    id: number
-  ): Promise<AxiosResponse<{ status: string; message: string }>> => {
-    const response = await gafarApi.put(`words/${id}`, getWordData());
-    return response;
-  },
 
   reset: () => set(() => ({
     word: "",
