@@ -14,8 +14,7 @@ export function AddWord() {
   const navigate = useNavigate();
   const { isAppLoading, setIsAppLoading } = useAppStore();
 
-  const handleAddWord = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleAddWord = async () => {
     try {
       setIsAppLoading(true);
       await addWord();
@@ -29,12 +28,17 @@ export function AddWord() {
     }
   };
 
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault(); // Prevent the default form submission
+    handleAddWord(); // Call your function to add the word
+  };
+
   return (
     <div className="flex flex-col items-center p-5">
       <Spin fullscreen spinning={isAppLoading} />
       <h1 className="text-lg font-semibold mb-5">Add Word</h1>
 
-      <form className="w-full flex flex-col gap-4" onSubmit={handleAddWord}>
+      <form className="w-full flex flex-col gap-4" onSubmit={handleSubmit}>
         <div className="flex justify-center gap-2 border-b border-solid border-gray-400 p-5">
           <Word />
           <Definitions />
@@ -43,7 +47,13 @@ export function AddWord() {
         {/* <DefaultMorfant /> */}
         <Conjugations />
         <Tags />
-        <Button type="primary" htmlType="submit" size="large" className="bg-blue-500 w-full">
+        <Button
+          type="primary"
+          htmlType="button"
+          size="large"
+          className="bg-blue-500 w-full"
+          onClick={handleSubmit}
+        >
           Add Word
         </Button>
       </form>

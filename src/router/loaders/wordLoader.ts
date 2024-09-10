@@ -9,6 +9,6 @@ export const wordLoader: LoaderFunction = async ({ params }) => {
   const { getWord } = useHomeStore.getState();
 
   const response = await getWord(id);
-  const wordObj = convertToCamelCase(response.data);
+  const wordObj = convertToCamelCase(response.data[0]);
   return wordObj;
 }

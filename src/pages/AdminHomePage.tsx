@@ -33,16 +33,16 @@ export default function AdminHomePage() {
   const [foundWords, setFoundWords] = useState<WordType[]>([]);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedWordId, setSelectedWordId] = useState<number>(0);
-  const { isAppLoading, setIsAppLoading } = useAppStore();
+  const { isAppLoading, setIsAppLoading } = useAppStore((state) => state);
+  const [searchMode, setSearchMode] = useState(false);
 
   useEffect(() => {
-    const fetchWords = async () => {
+    const fetchAllWords = async () => {
       const result = await getAllWords();
       setWords(result.data.words);
       setTotal(result.data.count);
     };
-
-    fetchWords();
+    fetchAllWords();
   }, [currentPage, getAllWords, setWords, sortBy, orderBy]);
 
   const pageCount = useMemo(() => Math.ceil(total / itemsPerPage), [total, itemsPerPage]);
@@ -61,17 +61,21 @@ export default function AdminHomePage() {
 
   const handleSearch: SearchProps["onSearch"] = async (value) => {
     if (!value.trim()) {
-      message.error("Пожайлуйста введите слово для поиска!");
+      const res = await getAllWords();
+      setFoundWords(res.data.words);
+      setSearchMode(false);
       return;
     }
     setIsAppLoading(true);
     const result = await fullTextSearch(value);
-    setFoundWords(result.data);
-    setIsAppLoading(false);
 
     if (result.data.length === 0) {
       message.error("Слово не найдено.");
     }
+
+    setFoundWords(result.data);
+    setIsAppLoading(false);
+    setSearchMode(true);
   };
 
   const handlePageClick = (event: { selected: number }) => {
@@ -139,11 +143,13 @@ export default function AdminHomePage() {
           document.body
         )}
 
-      <CustomPagination
-        pageCount={pageCount}
-        handlePageClick={handlePageClick}
-        currentPage={currentPage}
-      />
+      {searchMode === true ? null : (
+        <CustomPagination
+          pageCount={pageCount}
+          handlePageClick={handlePageClick}
+          currentPage={currentPage}
+        />
+      )}
     </div>
   );
 }
