@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useEditorStore } from "../stores/editorStore";
 import { useAppStore } from "../stores/appStore";
 import { message, Spin } from "antd";
+import { updateWord } from "../services/apiService";
 
 export function EditWord() {
   const data = useLoaderData() as WordType;
@@ -28,7 +29,6 @@ export function EditWord() {
     setSpeechPart,
     setWord,
     setTags,
-    updateWord,
     setComment,
     reset,
   } = useEditorStore((state) => state);

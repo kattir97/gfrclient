@@ -1,11 +1,10 @@
 import { Button, Form, Input, message, Spin } from "antd";
-import { useAuthStore } from "../stores/authStore";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAppStore } from "../stores/appStore";
+import { register } from "../services/apiService";
 
 const RegisterPage: React.FC = () => {
-  const { register } = useAuthStore();
   const { isAppLoading, setIsAppLoading } = useAppStore();
   const navigate = useNavigate();
 

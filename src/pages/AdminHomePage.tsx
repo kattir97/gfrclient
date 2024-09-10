@@ -12,6 +12,7 @@ import "../css_modules/pagination.css";
 import { CustomPagination } from "../components/CustomPagination";
 import { Sorting } from "../components/Sorting";
 import { useAppStore } from "../stores/appStore";
+import { fullTextSearch, getAllWords } from "../services/apiService";
 
 const { Search } = Input;
 
@@ -19,12 +20,10 @@ export default function AdminHomePage() {
   const {
     words,
     setWords,
-    getAllWords,
     itemsPerPage,
     setCurrentPage,
     currentPage,
     // searchWords,
-    fullTextSearch,
     sortBy,
     orderBy,
   } = useHomeStore((state) => state);
@@ -43,20 +42,10 @@ export default function AdminHomePage() {
       setTotal(result.data.count);
     };
     fetchAllWords();
-  }, [currentPage, getAllWords, setWords, sortBy, orderBy]);
+  }, [currentPage, setWords, sortBy, orderBy]);
 
   const pageCount = useMemo(() => Math.ceil(total / itemsPerPage), [total, itemsPerPage]);
 
-  // Debounce function
-  // const debounce = <T extends unknown[]>(func: (...args: T) => void, delay: number) => {
-  //   let timeoutId: ReturnType<typeof setTimeout>;
-  //   return (...args: T) => {
-  //     clearTimeout(timeoutId);
-  //     timeoutId = setTimeout(() => {
-  //       func(...args);
-  //     }, delay);
-  //   };
-  // };
   type SearchProps = GetProps<typeof Input.Search>;
 
   const handleSearch: SearchProps["onSearch"] = async (value) => {

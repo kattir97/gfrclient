@@ -1,5 +1,4 @@
 import { GetProps, Input, message, Spin } from "antd";
-import { useHomeStore } from "../stores/homeStore";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Card } from "antd";
 import { WordType } from "../utils/types";
@@ -7,13 +6,13 @@ import Mark from "mark.js";
 import { v4 as uuidv4 } from "uuid";
 import { useAppStore } from "../stores/appStore";
 import "./css/styles.css";
+import { fullTextSearch } from "../services/apiService";
 
 const { Search } = Input;
 type SearchProps = GetProps<typeof Input.Search>;
 
 const SearchPage: React.FC = () => {
   const [foundWords, setFoundWords] = useState([]);
-  const { fullTextSearch } = useHomeStore();
   const [searchTerm, setSearchTerm] = useState("");
   const elementRef = useRef<HTMLElement | null>(null);
   const { isAppLoading, setIsAppLoading } = useAppStore();

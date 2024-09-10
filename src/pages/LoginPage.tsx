@@ -3,9 +3,9 @@ import { useAuthStore } from "../stores/authStore";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppStore } from "../stores/appStore";
 import axios from "axios";
+import { admin, login } from "../services/apiService";
 
 const LoginPage: React.FC = () => {
-  const { login, admin } = useAuthStore();
   const navigate = useNavigate();
   const { setIsLogged, setIsAppLoading, isAppLoading } = useAppStore();
   const { setUser } = useAuthStore();
