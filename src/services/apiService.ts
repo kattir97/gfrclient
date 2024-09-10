@@ -1,4 +1,4 @@
-import { AxiosResponse } from "axios";
+import { AxiosPromise, AxiosResponse } from "axios";
 import { gafarApi } from "../apis/gafarApis";
 import { useHomeStore } from "../stores/homeStore";
 import { WordsApiResponse } from "../utils/types";
@@ -45,3 +45,22 @@ export const updateWord = async (
   const response = await gafarApi.put(`words/${id}`, getWordData());
   return response;
 };
+
+
+
+export const register = async (userData: unknown): Promise<AxiosPromise> => {
+  const response = await gafarApi.post("/auth/register", userData);
+  return response;
+}
+
+export const login = async (userData: unknown): Promise<AxiosPromise> => {
+  const response = await gafarApi.post("/auth/login", userData);
+
+  return response;
+};
+
+
+export const admin = async (): Promise<AxiosPromise> => {
+  const response = await gafarApi.get("/auth/admin");
+  return response;
+}
