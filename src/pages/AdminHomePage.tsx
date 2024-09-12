@@ -13,6 +13,7 @@ import { CustomPagination } from "../components/CustomPagination";
 import { Sorting } from "../components/Sorting";
 import { useAppStore } from "../stores/appStore";
 import { fullTextSearch, getAllWords } from "../services/apiService";
+import { useQuery } from "@tanstack/react-query";
 
 const { Search } = Input;
 
@@ -35,14 +36,29 @@ export default function AdminHomePage() {
   const { isAppLoading, setIsAppLoading } = useAppStore((state) => state);
   const [searchMode, setSearchMode] = useState(false);
 
+  const {
+    data: res,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["all-words", currentPage, sortBy, orderBy],
+    queryFn: () => getAllWords(),
+    staleTime: 5000,
+  });
+
   useEffect(() => {
-    const fetchAllWords = async () => {
-      const result = await getAllWords();
-      setWords(result.data.words);
-      setTotal(result.data.count);
-    };
-    fetchAllWords();
-  }, [currentPage, setWords, sortBy, orderBy]);
+    // const fetchAllWords = async () => {
+    //   const result = await getAllWords();
+    //   setWords(result.data.words);
+    //   setTotal(result.data.count);
+    // };
+    // fetchAllWords();
+    if (res) {
+      setWords(res.data.words);
+      setTotal(res.data.count);
+    }
+  }, [res, setWords]);
 
   const pageCount = useMemo(() => Math.ceil(total / itemsPerPage), [total, itemsPerPage]);
 
@@ -100,6 +116,14 @@ export default function AdminHomePage() {
       );
     });
   };
+
+  if (isLoading) {
+    return <h1>Loading...</h1>;
+  }
+
+  if (isError) {
+    return <h1>{error.message}</h1>;
+  }
 
   return (
     <div className="min-h-screen flex flex-col p-5">
