@@ -51,6 +51,7 @@ export default function AdminHomePage() {
 
     if (rf.data && rf.data.data) {
       if (rf.data?.data.length === 0) {
+        setFoundWords(words);
         message.error("Слово не найдено.");
       } else {
         setFoundWords(rf.data.data);

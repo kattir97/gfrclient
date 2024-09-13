@@ -1,7 +1,7 @@
 import { AxiosPromise, AxiosResponse } from "axios";
 import { gafarApi } from "../apis/gafarApis";
 import { useHomeStore } from "../stores/homeStore";
-import { WordsApiResponse } from "../utils/types";
+import { WordsApiResponse, WordType } from "../utils/types";
 import { getWordData } from "../stores/editorStore";
 
 export const getWord = async (id: number): Promise<AxiosResponse> => {
@@ -35,8 +35,10 @@ export const getAllWords = async (): Promise<AxiosResponse<WordsApiResponse>> =>
 }
 
 
-export const addWord = async (): Promise<void> => {
-  await gafarApi.post("words", getWordData());
+export const addWord = async (): Promise<WordType> => {
+  const newWord = await gafarApi.post("words", getWordData());
+  console.log('newWord', newWord)
+  return newWord.data;
 };
 
 export const updateWord = async (
