@@ -27,7 +27,13 @@ export default function AdminHomePage() {
   const [searchMode, setSearchMode] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const { data: res, isLoading, isError, error } = useAllWords(sortBy, orderBy);
+  const {
+    data: res,
+    isLoading,
+    isError,
+    error,
+    isPlaceholderData,
+  } = useAllWords(sortBy, orderBy, currentPage);
   const fts = useFullTextSearch(searchTerm);
 
   useEffect(() => {
@@ -35,7 +41,7 @@ export default function AdminHomePage() {
       setWords(res.data.words);
       setTotal(res.data.count);
     }
-  }, [res, setWords]);
+  }, [res, setWords, currentPage, setCurrentPage]);
 
   const pageCount = useMemo(() => Math.ceil(total / itemsPerPage), [total, itemsPerPage]);
 
@@ -93,7 +99,7 @@ export default function AdminHomePage() {
           className="flex p-1  shadow-sm rounded  mb-2 justify-between items-center"
           key={uuidv4()}
         >
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1 " style={{ opacity: isPlaceholderData ? 0.5 : 1 }}>
             <h2 className="text-xl font-m">{word.word}</h2>
           </div>
           <div className="flex gap-4">
