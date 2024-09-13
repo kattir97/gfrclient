@@ -16,7 +16,7 @@ const SearchPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const elementRef = useRef<HTMLElement | null>(null);
 
-  const { isFetching, isError, refetch, error } = useFullTextSearch(searchTerm);
+  const { isFetching, isError, refetch, error, isLoading } = useFullTextSearch(searchTerm);
 
   useEffect(() => {
     elementRef.current = document.querySelector("#search-node");
@@ -38,6 +38,7 @@ const SearchPage: React.FC = () => {
   };
 
   const handleSearch: SearchProps["onSearch"] = async (value) => {
+    setFoundWords([]);
     if (!value.trim()) {
       message.error("Пожайлуйста введите слово для поиска!");
       return;
@@ -46,30 +47,31 @@ const SearchPage: React.FC = () => {
       message.error("Длина слова должна быть больше двух букв");
       return;
     }
-    const result = await refetch();
-    setFoundWords(result.data?.data);
-    if (result.data?.data.length === 0) {
-      message.error("Слово не найдено.");
+
+    const rf = await refetch();
+    // const result = await refetch();
+    if (rf?.data?.data) {
+      setFoundWords(rf.data.data);
+      if (rf.data.data.length === 0) {
+        message.error("Слово не найдено.");
+      }
     }
   };
 
+  const loadingWord =
+    isLoading || isFetching ? (
+      <div className="w-full h-full flex items-center justify-center">
+        <Spin indicator={<LoadingOutlined spin />} />
+      </div>
+    ) : null;
+
+  const errorDiv = isError ? (
+    <div className="w-full h-full flex items-center justify-center">
+      Что-то пошло не так: {error.message}
+    </div>
+  ) : null;
+
   const renderedWords = () => {
-    if (isFetching) {
-      return (
-        <div className="w-full h-full flex items-center justify-center">
-          <Spin indicator={<LoadingOutlined spin />} />
-        </div>
-      );
-    }
-
-    if (isError) {
-      return (
-        <div className="w-full h-full flex items-center justify-center">
-          Что-то пошло не так: {error.message}
-        </div>
-      );
-    }
-
     return foundWords.map((w: WordType) => {
       const defs = w.definitions;
       const exs = w.examples.map((ex) => {
@@ -123,7 +125,6 @@ const SearchPage: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col p-5">
-      {/* <Spin fullscreen spinning={isAppLoading} /> */}
       <Search
         placeholder="Введите слово для поиска..."
         // allowClear
@@ -134,6 +135,8 @@ const SearchPage: React.FC = () => {
       />
 
       <div className="flex flex-col gap-2" id="search-node">
+        {loadingWord}
+        {errorDiv}
         {foundWords.length > 0 && renderedWords()}
       </div>
     </div>
