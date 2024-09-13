@@ -109,9 +109,11 @@ const SearchPage: React.FC = () => {
                 );
               })}
             </Card>
-            <Card title="Примеры" bordered={false} size="small" style={{ boxShadow: "none" }}>
-              {exs}
-            </Card>
+            {exs.length >= 1 ? (
+              <Card title="Примеры" bordered={false} size="small" style={{ boxShadow: "none" }}>
+                {exs}
+              </Card>
+            ) : null}
             {conjs.length >= 1 ? (
               <Card title="Cклонения" bordered={false} size="small" style={{ boxShadow: "none" }}>
                 {conjs}
