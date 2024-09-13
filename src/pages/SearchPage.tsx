@@ -4,9 +4,9 @@ import { Card } from "antd";
 import { WordType } from "../utils/types";
 import Mark from "mark.js";
 import { v4 as uuidv4 } from "uuid";
-import { useAppStore } from "../stores/appStore";
 import "./css/styles.css";
-import { fullTextSearch } from "../services/apiService";
+import { useFullTextSearch } from "../hooks/useFullTextSearch";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const { Search } = Input;
 type SearchProps = GetProps<typeof Input.Search>;
@@ -15,7 +15,8 @@ const SearchPage: React.FC = () => {
   const [foundWords, setFoundWords] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const elementRef = useRef<HTMLElement | null>(null);
-  const { isAppLoading, setIsAppLoading } = useAppStore();
+
+  const { isFetching, isError, refetch, error, isLoading } = useFullTextSearch(searchTerm);
 
   useEffect(() => {
     elementRef.current = document.querySelector("#search-node");
@@ -37,6 +38,7 @@ const SearchPage: React.FC = () => {
   };
 
   const handleSearch: SearchProps["onSearch"] = async (value) => {
+    setFoundWords([]);
     if (!value.trim()) {
       message.error("Пожайлуйста введите слово для поиска!");
       return;
@@ -45,14 +47,29 @@ const SearchPage: React.FC = () => {
       message.error("Длина слова должна быть больше двух букв");
       return;
     }
-    setIsAppLoading(true);
-    const result = await fullTextSearch(value);
-    setFoundWords(result.data);
-    setIsAppLoading(false);
-    if (result.data.length === 0) {
-      message.error("Слово не найдено.");
+
+    const rf = await refetch();
+    // const result = await refetch();
+    if (rf?.data?.data) {
+      setFoundWords(rf.data.data);
+      if (rf.data.data.length === 0) {
+        message.error("Слово не найдено.");
+      }
     }
   };
+
+  const loadingWord =
+    isLoading || isFetching ? (
+      <div className="w-full h-full flex items-center justify-center">
+        <Spin indicator={<LoadingOutlined spin />} />
+      </div>
+    ) : null;
+
+  const errorDiv = isError ? (
+    <div className="w-full h-full flex items-center justify-center">
+      Что-то пошло не так: {error.message}
+    </div>
+  ) : null;
 
   const renderedWords = () => {
     return foundWords.map((w: WordType) => {
@@ -108,7 +125,6 @@ const SearchPage: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col p-5">
-      <Spin fullscreen spinning={isAppLoading} />
       <Search
         placeholder="Введите слово для поиска..."
         // allowClear
@@ -119,6 +135,8 @@ const SearchPage: React.FC = () => {
       />
 
       <div className="flex flex-col gap-2" id="search-node">
+        {loadingWord}
+        {errorDiv}
         {foundWords.length > 0 && renderedWords()}
       </div>
     </div>

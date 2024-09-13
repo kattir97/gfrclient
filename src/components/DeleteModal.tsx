@@ -1,15 +1,16 @@
 import { Spin } from "antd";
 import { useAppStore } from "../stores/appStore";
-import { deleteWord } from "../services/apiService";
+import { useDeleteWord } from "../hooks/useDeleteWord";
 
 type OnCloseFunc = () => void;
 
 export const DeleteModal = ({ onClose, wordId }: { onClose: OnCloseFunc; wordId: number }) => {
   const { isAppLoading, setIsAppLoading } = useAppStore();
+  const { mutate } = useDeleteWord(wordId);
 
   const handleDeleteWord = async () => {
     setIsAppLoading(true);
-    await deleteWord(wordId);
+    mutate();
     setIsAppLoading(false);
     onClose();
   };

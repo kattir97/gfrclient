@@ -5,6 +5,7 @@ import { Dropdown, Space } from "antd";
 import { FaAngleDown } from "react-icons/fa6";
 import type { MenuProps } from "antd";
 import { useAuthStore } from "../stores/authStore";
+import { RiAdminFill } from "react-icons/ri";
 
 export const Layout: React.FC = () => {
   const { isLogged, setIsLogged } = useAppStore();
@@ -19,6 +20,11 @@ export const Layout: React.FC = () => {
   const items: MenuProps["items"] = [
     {
       key: "1",
+      icon: <RiAdminFill />,
+      label: <Link to={"/admin"}>Админка</Link>,
+    },
+    {
+      key: "2",
       danger: true,
       icon: <IoIosLogOut />,
       label: <a onClick={handleLogout}>Выйти</a>,
@@ -32,14 +38,17 @@ export const Layout: React.FC = () => {
         </Link>
         <div className="mr-5">
           {isLogged ? (
-            <Dropdown menu={{ items }} placement="bottom">
-              <a onClick={(e) => e.preventDefault()} className="cursor-pointer">
-                <Space className="flex justify-center items-center">
-                  {user}
-                  <FaAngleDown fontSize={15} style={{ marginTop: "3px" }} />
-                </Space>
-              </a>
-            </Dropdown>
+            <div className="flex gap-2">
+              <Link to={"/admin"}></Link>
+              <Dropdown menu={{ items }} placement="bottom">
+                <a onClick={(e) => e.preventDefault()} className="cursor-pointer">
+                  <Space className="flex justify-center items-center">
+                    {user}
+                    <FaAngleDown fontSize={15} style={{ marginTop: "3px" }} />
+                  </Space>
+                </a>
+              </Dropdown>
+            </div>
           ) : null}
         </div>
       </div>
