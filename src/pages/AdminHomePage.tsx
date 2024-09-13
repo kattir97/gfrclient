@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { WordType } from "../utils/types";
 import { Link } from "react-router-dom";
 import { LuPlus } from "react-icons/lu";
@@ -11,33 +11,24 @@ import { IoPencil, IoTrash } from "react-icons/io5";
 import "../css_modules/pagination.css";
 import { CustomPagination } from "../components/CustomPagination";
 import { Sorting } from "../components/Sorting";
-import { useAppStore } from "../stores/appStore";
-import { fullTextSearch, getAllWords } from "../services/apiService";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useAllWords } from "../hooks/useAllWords";
+import { useFullTextSearch } from "../hooks/useFullTextSearch";
 
 const { Search } = Input;
 
 export default function AdminHomePage() {
-  const {
-    words,
-    setWords,
-    itemsPerPage,
-    setCurrentPage,
-    currentPage,
-    // searchWords,
-    sortBy,
-    orderBy,
-  } = useHomeStore((state) => state);
+  const { words, setWords, itemsPerPage, setCurrentPage, currentPage, sortBy, orderBy } =
+    useHomeStore((state) => state);
   const [total, setTotal] = useState<number>(0);
-  // const pagesCount = Math.ceil(total / itemsPerPage);
   const [foundWords, setFoundWords] = useState<WordType[]>([]);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedWordId, setSelectedWordId] = useState<number>(0);
-  const { isAppLoading, setIsAppLoading } = useAppStore((state) => state);
   const [searchMode, setSearchMode] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const { data: res, isLoading, isError, error } = useAllWords(sortBy, orderBy);
+  const fts = useFullTextSearch(searchTerm);
 
   useEffect(() => {
     if (res) {
@@ -52,21 +43,26 @@ export default function AdminHomePage() {
 
   const handleSearch: SearchProps["onSearch"] = async (value) => {
     if (!value.trim()) {
-      const res = await getAllWords();
-      setFoundWords(res.data.words);
+      setFoundWords(words);
       setSearchMode(false);
       return;
     }
-    setIsAppLoading(true);
-    const result = await fullTextSearch(value);
+    const rf = await fts.refetch();
 
-    if (result.data.length === 0) {
-      message.error("Слово не найдено.");
+    if (rf.data && rf.data.data) {
+      if (rf.data?.data.length === 0) {
+        message.error("Слово не найдено.");
+      } else {
+        setFoundWords(rf.data.data);
+      }
+    } else {
+      message.error("Ошибка при поиске.");
     }
-
-    setFoundWords(result.data);
-    setIsAppLoading(false);
     setSearchMode(true);
+  };
+
+  const handleSearchTerm = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
   };
 
   const handlePageClick = (event: { selected: number }) => {
@@ -74,7 +70,7 @@ export default function AdminHomePage() {
   };
 
   const renderedWords = (arr: WordType[]) => {
-    if (isLoading) {
+    if (isLoading || fts.isFetching) {
       return (
         <div className="w-full h-full flex items-center justify-center">
           <Spin indicator={<LoadingOutlined spin />} />
@@ -121,7 +117,7 @@ export default function AdminHomePage() {
 
   return (
     <div className="min-h-screen flex flex-col p-5">
-      <Spin fullscreen spinning={isAppLoading} />
+      {/* <Spin fullscreen spinning={isAppLoading} /> */}
       <Link to={"/add-word"}>
         <Button
           style={{ height: "4rem", width: "4rem" }}
@@ -137,6 +133,7 @@ export default function AdminHomePage() {
         allowClear
         size="large"
         onSearch={handleSearch}
+        onChange={handleSearchTerm}
         className="mb-5"
       />
       <Sorting />

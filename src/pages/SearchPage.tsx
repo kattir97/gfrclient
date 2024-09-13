@@ -4,9 +4,9 @@ import { Card } from "antd";
 import { WordType } from "../utils/types";
 import Mark from "mark.js";
 import { v4 as uuidv4 } from "uuid";
-import { useAppStore } from "../stores/appStore";
 import "./css/styles.css";
-import { fullTextSearch } from "../services/apiService";
+import { useFullTextSearch } from "../hooks/useFullTextSearch";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const { Search } = Input;
 type SearchProps = GetProps<typeof Input.Search>;
@@ -15,7 +15,8 @@ const SearchPage: React.FC = () => {
   const [foundWords, setFoundWords] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const elementRef = useRef<HTMLElement | null>(null);
-  const { isAppLoading, setIsAppLoading } = useAppStore();
+
+  const { isFetching, isError, refetch, error } = useFullTextSearch(searchTerm);
 
   useEffect(() => {
     elementRef.current = document.querySelector("#search-node");
@@ -45,16 +46,30 @@ const SearchPage: React.FC = () => {
       message.error("Длина слова должна быть больше двух букв");
       return;
     }
-    setIsAppLoading(true);
-    const result = await fullTextSearch(value);
-    setFoundWords(result.data);
-    setIsAppLoading(false);
-    if (result.data.length === 0) {
+    const result = await refetch();
+    setFoundWords(result.data?.data);
+    if (result.data?.data.length === 0) {
       message.error("Слово не найдено.");
     }
   };
 
   const renderedWords = () => {
+    if (isFetching) {
+      return (
+        <div className="w-full h-full flex items-center justify-center">
+          <Spin indicator={<LoadingOutlined spin />} />
+        </div>
+      );
+    }
+
+    if (isError) {
+      return (
+        <div className="w-full h-full flex items-center justify-center">
+          Что-то пошло не так: {error.message}
+        </div>
+      );
+    }
+
     return foundWords.map((w: WordType) => {
       const defs = w.definitions;
       const exs = w.examples.map((ex) => {
@@ -108,7 +123,7 @@ const SearchPage: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col p-5">
-      <Spin fullscreen spinning={isAppLoading} />
+      {/* <Spin fullscreen spinning={isAppLoading} /> */}
       <Search
         placeholder="Введите слово для поиска..."
         // allowClear
