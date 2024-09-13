@@ -13,7 +13,8 @@ import { CustomPagination } from "../components/CustomPagination";
 import { Sorting } from "../components/Sorting";
 import { useAppStore } from "../stores/appStore";
 import { fullTextSearch, getAllWords } from "../services/apiService";
-import { useQuery } from "@tanstack/react-query";
+import { LoadingOutlined } from "@ant-design/icons";
+import { useAllWords } from "../hooks/useAllWords";
 
 const { Search } = Input;
 
@@ -36,24 +37,9 @@ export default function AdminHomePage() {
   const { isAppLoading, setIsAppLoading } = useAppStore((state) => state);
   const [searchMode, setSearchMode] = useState(false);
 
-  const {
-    data: res,
-    isLoading,
-    isError,
-    error,
-  } = useQuery({
-    queryKey: ["all-words", currentPage, sortBy, orderBy],
-    queryFn: () => getAllWords(),
-    staleTime: 5000,
-  });
+  const { data: res, isLoading, isError, error } = useAllWords(sortBy, orderBy);
 
   useEffect(() => {
-    // const fetchAllWords = async () => {
-    //   const result = await getAllWords();
-    //   setWords(result.data.words);
-    //   setTotal(result.data.count);
-    // };
-    // fetchAllWords();
     if (res) {
       setWords(res.data.words);
       setTotal(res.data.count);
@@ -88,6 +74,22 @@ export default function AdminHomePage() {
   };
 
   const renderedWords = (arr: WordType[]) => {
+    if (isLoading) {
+      return (
+        <div className="w-full h-full flex items-center justify-center">
+          <Spin indicator={<LoadingOutlined spin />} />
+        </div>
+      );
+    }
+
+    if (isError) {
+      return (
+        <div className="w-full h-full flex items-center justify-center">
+          Что-то пошло не так: {error.message}
+        </div>
+      );
+    }
+
     return arr.map((word: WordType) => {
       return (
         <div
@@ -116,14 +118,6 @@ export default function AdminHomePage() {
       );
     });
   };
-
-  if (isLoading) {
-    return <h1>Loading...</h1>;
-  }
-
-  if (isError) {
-    return <h1>{error.message}</h1>;
-  }
 
   return (
     <div className="min-h-screen flex flex-col p-5">
