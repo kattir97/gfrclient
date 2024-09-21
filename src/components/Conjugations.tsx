@@ -53,6 +53,9 @@ export const Conjugations = () => {
   };
 
   const handleRemoveConjugation = (index: string): void => {
+    if (conjugations.length <= 1) {
+      return;
+    }
     const newConjugations = conjugations.filter((conjug: ConjugationType) => conjug.id !== index);
     setConjugations(newConjugations);
   };

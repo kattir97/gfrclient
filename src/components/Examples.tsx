@@ -33,6 +33,9 @@ export const Examples = () => {
   };
 
   const handleRemoveExample = (index: string): void => {
+    if (examples.length <= 1) {
+      return;
+    }
     const newExamples = examples.filter((example: ExampleType) => example.id !== index);
     setExamples(newExamples);
   };
